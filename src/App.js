@@ -1,12 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import {useState} from 'react' //react의 useState함수를 사용할거야
-
+import {useState} from 'react'
 
 function HeaderTag(props){
   const onClickHeader = (e) => {
     e.preventDefault();
-    props.onChangeMode(); //이게 실행되면, onChangeModeHeader 함수가 실행된다
+    props.onChangeMode();
   }
   return(
     <header>
@@ -30,8 +29,8 @@ function NavTag(props){
   console.log('props.data', props.data);
 
   const clickHander = (e) => {
-    e.preventDefault(); //a태그는 클릭하면 다음페이지로 넘어가는데, 넘어가지 않도록 막아주는 역할! (e:event의 객체)
-    props.onChangeMode(Number(e.target.dataset.id)); //이게 실행되면, onChangeModeNav 함수가 실행된다
+    e.preventDefault();
+    props.onChangeMode(Number(e.target.dataset.id));
   }
 
   let lis = [];
@@ -71,19 +70,32 @@ function Create(props){
 
 
 function Update(props){
+  var [title, setTitle] = useState(props.title);
+  var [desc, setDesc] = useState(props.desc);
+
   return(
     <form onSubmit={e=>{
       e.preventDefault();
       var title = e.target.title.value;
       var desc = e.target.desc.value;
-      props.onCreate({
+      props.onUpdate({
         title:title,
         desc:desc
       });
     }}>
       <h2>Update</h2>
-      <p><input name="title" type="text" placeholder="title" value={props.title}></input></p>
-      <p><textarea name="desc" placeholder="description" value={props.desc}></textarea></p>
+      <p><input 
+        name="title" 
+        type="text" 
+        placeholder="title" 
+        onChange={e=>setTitle(e.target.value)} //기존의 
+        value={title}
+      ></input></p>
+      <p><textarea 
+        onChange={e=>setDesc(e.target.value)}
+        name="desc" placeholder="description" 
+        value={desc}
+      ></textarea></p>
       <p><input type="submit"></input></p>
     </form>
   )
@@ -142,15 +154,16 @@ function App() {
     for(let i=0; i<topics.length; i++){ //필터 이용하면 1줄로 요약 가능
       if(topics[i].id === id){
         article = <Update title={topics[i].title} desc={topics[i].desc} onUpdate={data=>{
-          //수정관련일
           console.log('update', data);
+          //수정관련
           var newTopics = [...topics];
           for(let i=0; i<newTopics.length; i++){
             if(newTopics[i].id === id){
               newTopics[i] = {
-                "id" : newTopics[i].id,
-                "title":data.title,
-                "desc":data.desc
+                id : newTopics[i].id, 
+                //...newTopics[i], //spread operator 사용 : 업데이트 되는 부분만 바꾼다
+                title : data.title,
+                desc : data.desc
               }
             }
           }
