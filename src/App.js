@@ -35,7 +35,7 @@ function NavTag(props){
 
   let lis = [];
   for(let i=0; i<props.data.length; i++){
-    lis.push(<li><a data-id={props.data[i].id} onClick={clickHander}
+    lis.push(<li key={props.data[i].id}><a data-id={props.data[i].id} onClick={clickHander}
       href={props.data[i].id+'.html'}>{props.data[i].title}</a></li>);
   }
 
@@ -88,7 +88,10 @@ function Update(props){
         name="title" 
         type="text" 
         placeholder="title" 
-        onChange={e=>setTitle(e.target.value)} //기존의 
+        onChange={e=>{
+          console.log(e.target.value);
+          setTitle(e.target.value)
+        }} //기존의 
         value={title}
       ></input></p>
       <p><textarea 
@@ -123,8 +126,18 @@ function App() {
     setId(id);
   }
   const onChangeModeControl = (_mode) => {
-    console.log('onChangeModeControl', _mode);
-    setMode(_mode);
+    if(_mode === 'DELETE'){
+      var newTopics = [];
+      for(let i=0; i<topics.length; i++){
+        if(topics[i].id === id){
+        } else {
+          newTopics.push(topics[i]);
+        }
+      }
+      setTopics(newTopics);
+    } else {
+      setMode(_mode);
+    }
   }
 
   let article = null;
@@ -196,10 +209,6 @@ function Control(props){
       <a href="/create" data-mode="CREATE" onClick={clickHander}>create</a> | 
       <a href="/update" data-mode="UPDATE" onClick={clickHander}>update</a> | 
       <input type="button" value="delete" data-mode="DELETE" onClick={clickHander}/>
-        
-      {/* 클릭하면 create&update 페이지로 감
-      BUT 삭제는 : 클릭시 오퍼레이션 한다. (삭제링크가 있으면 안됨) 
-      <a href="/delete">delete</a> 이면 안됨 */}
     </div>
   );
 }
