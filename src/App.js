@@ -47,7 +47,6 @@ function NavTag(props){
     </nav>
   )
 }
-/////////
 
 function Create(props){
   return (
@@ -104,14 +103,12 @@ function Update(props){
   )
 }
 
-///////////
-
 function App() {  
   console.log('App render');
   const [nextId, setNextId] = useState(3);
   const [mode, setMode] = useState('CREATE'); 
   const [id, setId] = useState(1);
-  let [topics, setTopics] = useState([
+  const [topics, setTopics] = useState([
     {id:1, title:'HTML', desc:'HTML is ...'},
     {id:2, title:'CSS', desc:'CSS is ...'}
   ]);
