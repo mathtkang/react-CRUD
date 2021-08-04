@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import {useState} from 'react' //react의 useState함수를 사용할거야
+
+
 function HeaderTag(props){
   const onClickHeader = (e) => {
     e.preventDefault();
@@ -50,13 +52,16 @@ function NavTag(props){
 
 function App() {  
   console.log('App render');
+  const [nextId, setNextId] = useState(3);
   const [mode, setMode] = useState('CREATE'); //이게 실행되면서, mode='WELCOME' 가 된다.(읽을 때는 앞에있는 mode로 읽고, 변경할 때는 setMode()함수로 변경)
   //mode의 디폴트 값을 CREATE 로 바꿔준다.
   const [id, setId] = useState(1);
-  let topics = [
+  // let topics = [ //평범한 변수인 topics는 state가 아니기 때문에 다시 리로드 되지 않는다.
+  let [topics, setTopics] = useState([
     {id:1, title:'HTML', desc:'HTML is ...'},
     {id:2, title:'CSS', desc:'CSS is ...'}
-  ];
+    //article에 의해 받은 값을 여기에 넣어줌
+  ]);
 
   const onChangeModeHeader = () => {
     console.log('onChangeModeHeader');
@@ -86,10 +91,37 @@ function App() {
       }
     }
   } else if(mode === 'CREATE'){
-    const onSubmitHandler = e => e.preventDefault();
+    const onSubmitHandler = (e) => {
+      e.preventDefault();
+      const title = e.target.title.value;
+      const desc = e.target.desc.value;
+      // topics.push({ 
+      //   "id" : 3,
+      //   "title" : title,
+      //   "desc" : desc
+      // });
+      // setTopics(topics); //불변성, 가변성에 의해서 (복제후)아래와 같이 사용해줘야함
+
+      let newTopics = [...topics];
+      newTopics.push({
+        "id" : nextId,
+        "title" : title,
+        "desc" : desc
+      });
+      setTopics(newTopics);
+      // 위의 newTopics 와 같은 방식
+      // setTopics([...topics,{
+      //   "id":3,
+      //   "title":title,
+      //   "desc":desc
+      // }]
+      setMode('READ');
+      setId(nextId);
+      setNextId(nextId+1);
+
+    }
     article = (
       <form onSubmit={onSubmitHandler}>
-      {/* <form onSubmit={e.preventDefault()}> */}
         <h2>Create</h2>
         <p><input name="title" type="text" placeholder="title"></input></p>
         <p><textarea name="desc" placeholder="description"></textarea></p>
